@@ -1,6 +1,10 @@
 import express from "express";
 import cors from "cors";
 import cookieparser from "cookie-parser";
+import errorHandler from './middlewares/errorHandler.js';
+
+
+
 const app = express()
 
 app.use(cors({
@@ -22,5 +26,8 @@ app.use("/user",userRouter)
 app.use("/vedio",vedioRouter)
 app.use("/comment",commentRouter)
 
+
+
+app.use(errorHandler); //  this must be at the END, after routes
 
 export{app}
