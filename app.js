@@ -23,30 +23,4 @@ app.use("/vedio",vedioRouter)
 app.use("/comment",commentRouter)
 
 
-import fs from 'fs';
-import path from 'path';
-
-function walkDir(dir, fileList = []) {
-  const files = fs.readdirSync(dir);
-  files.forEach(file => {
-    const fullPath = path.join(dir, file);
-    if (fs.statSync(fullPath).isDirectory()) {
-      walkDir(fullPath, fileList);
-    } else {
-      fileList.push(fullPath);
-    }
-  });
-  return fileList;
-}
-
-app.get('/debug-all-files', (req, res) => {
-  try {
-    const files = walkDir(process.cwd());
-    res.json({ files });
-  } catch (err) {
-    res.status(500).json({ error: err.message });
-  }
-});
-
-
 export{app}
