@@ -22,6 +22,10 @@ app.use("/user",userRouter)
 app.use("/vedio",vedioRouter)
 app.use("/comment",commentRouter)
 
+
+import fs from 'fs';
+import path from 'path';
+
 function walkDir(dir, fileList = []) {
   const files = fs.readdirSync(dir);
   files.forEach(file => {
