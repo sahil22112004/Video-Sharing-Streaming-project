@@ -6,7 +6,8 @@ import {uploadOnCloudinary} from "../utils/cloudinary.js"
 
 const option = {
     httpOnly: true,
-    secure: true
+    sameSite: "None",
+    secure: false
 }
 
 const generateAccessTokenRefreshToken = async (user_id)=>{
