@@ -30,7 +30,7 @@ const uploadVideo = AsyncHandler(async (req,res)=>{
     const uploadvideo = await Video.create({
         title,
         description,
-        user_id: req.user._id,
+        userId: req.user._id,
         video : video.url,
         videoId : video.public_id,
         thumbnail : thumbnail.url,
