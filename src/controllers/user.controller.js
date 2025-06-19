@@ -6,7 +6,7 @@ import {uploadOnCloudinary} from "../utils/cloudinary.js"
 
 const option = {
     httpOnly: true,
-    sameSite: "Lax",
+    sameSite: "None",
     secure: false
 }
 
