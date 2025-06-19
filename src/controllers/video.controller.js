@@ -121,7 +121,9 @@ const deletevideo = AsyncHandler( async (req,res,) =>{
     if (!video){
         throw new ApiError(404, "Video not found")
     }
-    if (req.user._id == video.userId){
+    console.log(req.user._id)
+    console.log(video)
+    if (req.user._id.equals(video.userId)){
         console.log(video.videoId)
         await cloudinary.uploader.destroy(video.videoId,{ resource_type: "video" })
         await cloudinary.uploader.destroy(video.thumbnailId)
