@@ -209,11 +209,27 @@ const videoviews = AsyncHandler( async (req,res) =>{
         new ApiResponse(200, { views: video.views }, "View count updated"))
 })
 
+const getMyVideo = AsyncHandler(async (req, res) => {
+    const user = await User.findById(req.user._id)
+    console.log(user)
+    const videos = await Video.find({ userId: user._id })
+        .populate("userId", "userName avatar")
+        .sort({ createdAt: -1 });
+
+    console.log(videos)
+
+    return res.status(200).json(
+        new ApiResponse(200, videos, "Videos fetched successfully")
+    );
+});
+
+
 export {
     uploadVideo,
     updateVideo,
     deletevideo,
     likevideo,
     dislikevideo,
-    videoviews
+    videoviews,
+    getMyVideo
 }
