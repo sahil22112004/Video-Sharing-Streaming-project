@@ -66,7 +66,7 @@ const updateVideo = AsyncHandler(async (req,res)=>{
     const {title, description, category,tags} = req.body;
     console.log(video)
 
-    if(req.user._id == video.user_id){
+    if(req.user._id == video.userId){
 
         if (Object.keys(req.files).length !== 0 ){
 
@@ -121,9 +121,7 @@ const deletevideo = AsyncHandler( async (req,res,) =>{
     if (!video){
         throw new ApiError(404, "Video not found")
     }
-    console.log(video)
-    console.log(req.user._id)
-    if (req.user._id == video.user_id){
+    if (req.user._id == video.userId){
         console.log(video.videoId)
         await cloudinary.uploader.destroy(video.videoId,{ resource_type: "video" })
         await cloudinary.uploader.destroy(video.thumbnailId)
