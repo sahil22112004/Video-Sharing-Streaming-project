@@ -224,6 +224,60 @@ const getMyVideo = AsyncHandler(async (req, res) => {
 });
 
 
+const getHomeVideos = AsyncHandler(async (req, res) => {
+  const loggedInUserId = req.user?._id;
+
+  let selectedVideos = [];
+
+  if (loggedInUserId) {
+    // 🎯 CASE 1: Logged-in user → exclude their videos unless needed
+
+    const otherVideos = await Video.find({ userId: { $ne: loggedInUserId } })
+      .populate("userId", "userName avatar")
+      .sort({ views: -1 });
+
+    if (otherVideos.length >= 30) {
+      // Randomly select 30 from others
+      const pickedSet = new Set();
+      while (pickedSet.size < 30) {
+        const randIndex = Math.floor(Math.random() * otherVideos.length);
+        pickedSet.add(otherVideos[randIndex]);
+      }
+      selectedVideos = Array.from(pickedSet);
+    } else {
+      // Add all other videos
+      selectedVideos = otherVideos;
+
+      const remaining = 30 - otherVideos.length;
+
+      const myVideos = await Video.find({ userId: loggedInUserId })
+        .populate("userId", "userName avatar")
+        .sort({ views: -1 })
+        .limit(remaining);
+
+      selectedVideos = [...selectedVideos, ...myVideos];
+    }
+  } else {
+    // 🎯 CASE 2: No user logged in → get 30 random from all videos sorted by views
+
+    const allVideos = await Video.find({})
+      .populate("userId", "userName avatar")
+      .sort({ views: -1 });
+
+    const pickedSet = new Set();
+    while (pickedSet.size < Math.min(30, allVideos.length)) {
+      const randIndex = Math.floor(Math.random() * allVideos.length);
+      pickedSet.add(allVideos[randIndex]);
+    }
+    selectedVideos = Array.from(pickedSet);
+  }
+
+  return res.status(200).json(
+    new ApiResponse(200, selectedVideos, "Home videos fetched successfully")
+  );
+});
+
+
 export {
     uploadVideo,
     updateVideo,
@@ -231,5 +285,6 @@ export {
     likevideo,
     dislikevideo,
     videoviews,
-    getMyVideo
+    getMyVideo,
+    getHomeVideos
 }
