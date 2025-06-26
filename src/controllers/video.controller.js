@@ -195,17 +195,6 @@ const dislikevideo = AsyncHandler( async (req,res) =>{
         )
 })
 
-const videoviews = AsyncHandler( async (req,res) =>{
-    const video = await Video.findById(req.params.videoId)
-    if (!video){
-        throw new ApiError(404, "Video not found")
-        }
-    
-    video.views += 1
-    await video.save()
-    return res.status(200).json(
-        new ApiResponse(200, { views: video.views }, "View count updated"))
-})
 
 const getMyVideo = AsyncHandler(async (req, res) => {
     const user = await User.findById(req.user._id)
@@ -275,18 +264,21 @@ const getHomeVideos = AsyncHandler(async (req, res) => {
   );
 });
 
-const openVideo = AsyncHandler(async( req,res)=>{
-    const video = await Video.findById(req.params.id).populate("userId", "userName avatar subscribers");
-    if (!video){
-        throw new ApiError(404,"video not found");
-    }
-    Video.views += 1;
-    await video.save()
-    res.status(200).json(
-        new ApiResponse(200,video,"video opened successfully")
-    );
+const openVideo = AsyncHandler(async (req, res) => {
+  const video = await Video.findById(req.params.id).populate("userId", "userName avatar subscribers");
 
-})
+  if (!video) {
+    throw new ApiError(404, "Video not found");
+  }
+
+  video.views += 1; // ✅ fix here
+  await video.save();
+
+  return res.status(200).json(
+    new ApiResponse(200, video, "Video opened successfully")
+  );
+});
+
 
 
 export {
@@ -295,7 +287,7 @@ export {
     deletevideo,
     likevideo,
     dislikevideo,
-    videoviews,
     getMyVideo,
-    getHomeVideos
+    getHomeVideos,
+    openVideo
 }

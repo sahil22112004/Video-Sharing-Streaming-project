@@ -1,6 +1,6 @@
 import { Router } from "express";
 import {verifyJWT} from "../middelware/auth.middleware.js";
-import { uploadVideo,updateVideo,deletevideo,likevideo,dislikevideo,videoviews,getMyVideo,getHomeVideos } from "../controllers/video.controller.js";
+import { uploadVideo,updateVideo,deletevideo,likevideo,dislikevideo,getMyVideo,getHomeVideos,openVideo } from "../controllers/video.controller.js";
 
 import { upload } from "../middelware/multer.middleware.js";
 
@@ -36,12 +36,11 @@ router.route("/like/:videoId").put(verifyJWT,likevideo)
 
 router.route("/dislike/:videoId").put(verifyJWT,dislikevideo)
 
-router.route("/views/:videoId").put(videoviews)
-
 router.route("/myVideo").get(verifyJWT,getMyVideo)
 
 router.route("/homeVideo").get(getHomeVideos)
 
+router.route("/openvideo/:videoId").get(openVideo)
 
 
 
