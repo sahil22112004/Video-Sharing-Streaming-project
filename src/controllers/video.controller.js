@@ -7,8 +7,6 @@ import { v2 as cloudinary } from 'cloudinary';
 import {User} from "../models/user.model.js"
 
 
-
-
 const uploadVideo = AsyncHandler(async (req,res)=>{
     const {title, description, category} = req.body;
 
@@ -276,6 +274,19 @@ const getHomeVideos = AsyncHandler(async (req, res) => {
     new ApiResponse(200, selectedVideos, "Home videos fetched successfully")
   );
 });
+
+const openVideo = AsyncHandler(async( req,res)=>{
+    const video = await Video.findById(req.params.id).populate("userId", "userName avatar subscribers");
+    if (!video){
+        throw new ApiError(404,"video not found");
+    }
+    Video.views += 1;
+    await video.save()
+    res.status(200).json(
+        new ApiResponse(200,video,"video opened successfully")
+    );
+
+})
 
 
 export {
