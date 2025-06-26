@@ -265,7 +265,7 @@ const getHomeVideos = AsyncHandler(async (req, res) => {
 });
 
 const openVideo = AsyncHandler(async (req, res) => {
-  const video = await Video.findById(req.params.id).populate("userId", "userName avatar subscribers");
+  const video = await Video.findById(req.params.videoId).populate("userId", "userName avatar subscribers");
 
   if (!video) {
     throw new ApiError(404, "Video not found");
